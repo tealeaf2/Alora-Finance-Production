@@ -1,14 +1,14 @@
 {
     "builds": [
       {
-        "src": "/alora-backend/backend/wsgi.py",
+        "src": "/backend/wsgi.py",
         "use": "@vercel/python"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/alora-backend/backend/wsgi.py"
+        "dest": "/backend/wsgi.py"
       }
     ]
 }
