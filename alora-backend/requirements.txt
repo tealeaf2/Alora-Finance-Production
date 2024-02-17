@@ -10,3 +10,4 @@ sqlparse==0.4.4
 typing_extensions==4.9.0
 zstandard==0.22.0
 whitenoise==6.6.0
+gunicorn==21.2.0
