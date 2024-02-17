@@ -16,7 +16,6 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_DIR = BASE_DIR.parent / 'alora-frontend'
 import os
 
 
@@ -125,8 +124,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # os.path.join(BASE_DIR, 'alora-frontend/build')
-            FRONTEND_DIR / 'build',
+            os.path.join(BASE_DIR, 'alora-frontend/build')
+            # FRONTEND_DIR / 'build',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
