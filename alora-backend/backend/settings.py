@@ -15,7 +15,7 @@ from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 
 
@@ -124,7 +124,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'alora-frontend/build')
+            # os.path.join(BASE_DIR, 'alora-frontend/build')
+            'alora-frontend/build'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -196,10 +197,11 @@ MEDIA_URL = '/icons/'
 
 #this is to let backend know that the static folder exists in backend
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    BASE_DIR / 'alora-frontend/build/static'
-    # os.path.join(BASE_DIR, 'static'),
-    # os.path.join(BASE_DIR, 'alora-frontend/build/static')
+    # BASE_DIR / 'static',
+    # BASE_DIR / 'alora-frontend/build/static'
+    'static',
+    'alora-frontend/build/static'
+
 ]
 
 MEDIA_ROOT = 'static/icons'
