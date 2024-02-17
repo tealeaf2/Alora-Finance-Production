@@ -16,6 +16,7 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+import os
 
 
 # Quick-start development settings - unsuitable for production
@@ -47,7 +48,7 @@ INSTALLED_APPS = [
     
     # EXTERNAL
     'rest_framework',
-    # 'corsheader',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -119,10 +120,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
+print(os.path.exists(BASE_DIR / 'alora-frontend/build/static/css/main.77f60240.css'))
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'alora-frontend/build')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,8 +148,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'alora_finance',
+        'USER': 'tealeaf2',
+        'PASSWORD': 'metamorphosis',
+        'HOST': 'alora-finance-identifier.cpw48akyohja.us-east-2.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
@@ -184,12 +193,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = '/icons/'
 
 #this is to let backend know that the static folder exists in backend
-STATICFILES_DIR = [
-    BASE_DIR / 'static'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'alora-frontend/build/static'
+    # os.path.join(BASE_DIR, 'static'),
+    # os.path.join(BASE_DIR, 'alora-frontend/build/static')
 ]
 
 MEDIA_ROOT = 'static/icons'
@@ -198,5 +210,7 @@ MEDIA_ROOT = 'static/icons'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'account.Account'
