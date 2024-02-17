@@ -198,7 +198,7 @@ MEDIA_URL = '/icons/'
 #this is to let backend know that the static folder exists in backend
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'alora-frontend/build/static'
+    # BASE_DIR / 'alora-frontend/build/static'
 ]
 
 MEDIA_ROOT = 'static/icons'
