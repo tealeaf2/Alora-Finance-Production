@@ -26,7 +26,7 @@ import os
 SECRET_KEY = 'django-insecure-67l8tdvor4y40e%0dh-$si2ycr*dju(5z&cu7z13n(7@!@=_r_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -199,11 +199,11 @@ MEDIA_URL = '/icons/'
 #this is to let backend know that the static folder exists in backend
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    # BASE_DIR / 'alora-frontend/build/static'
+    BASE_DIR / 'alora-frontend/build/static'
 ]
 
 MEDIA_ROOT = 'static/icons'
-STATIC_ROOT = STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
