@@ -199,8 +199,8 @@ MEDIA_URL = '/icons/'
 STATICFILES_DIRS = [
     # BASE_DIR / 'static',
     # BASE_DIR / 'alora-frontend/build/static'
-    'static',
-    'alora-frontend/build/static'
+    '/static',
+    '/alora-frontend/build/static'
 
 ]
 
