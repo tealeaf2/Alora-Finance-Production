@@ -124,8 +124,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # os.path.join(BASE_DIR, 'alora-frontend/build')
-            'alora-frontend/build',
+            os.path.join(BASE_DIR, 'alora-backend/alora-frontend/build')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
