@@ -1,18 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect, useCallback} from 'react'
 import { Link } from "react-router-dom";
-import '../styles/index.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+// import '../styles/index.css';
 import '../styles/App.css';
+import { register } from '../redux/actions/accountActions'
+
 
 import sprout from '../images/Sprout.png';
 import titleLogo from '../images/logo-1.png'
 
+
 function RegisterPage() {
+  const location = useLocation();
+  const history = useNavigate();
+  const dispatch = useDispatch();
 
   //For fields
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const [email, setEmail] = useState("test@gmail.com");
   const [password, setPassword] = useState("");
-  const [passwordCheck, setPasswordCheck] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [school, setSchool] = useState("")
+  const [accountType, setAccountType] = useState("");
+
+  const [message, setMessage] = useState("");
+  const [canSubmit, setCanSubmit] = useState(false) // whether we can submit form or not
+
 
   //To check for states of user when clicked
   const [pwdCheckClassName, setPwdCheckClassName] = useState("absolute top-3 -translate-y-1/2 text-xs right-[30px] text-[#FF0000] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs hidden")
@@ -20,28 +36,96 @@ function RegisterPage() {
   const [teacherClicked, setTeacherClicked] = useState(false);
   const [fieldsRequired, setFieldsRequired] = useState(false);
 
+
+  const redirectStudent = location.search ? location.search.split('=')[1] : '/progress';
+  const redirectTeacher = location.search ? location.search.split('=')[1] : '/teacher/class';
+  const accountLogin = useSelector(state => state.accountLogin);
+  const { error, loading, accountInfo } = accountLogin;
+
+
+  // const accountRegister = useSelector(state => state.accountRegister);
+  // const accountLogin = useSelector(state => state.aco);
+
+  // const { error, loading, accountInfo } = accountRegister;
+
+  // check if we can submit
+  // const checkSubmit = () => {
+  //   if (password !== confirmPassword) {
+  //     setCanSubmit(false);
+  //     setMessage('Passwords do not match')
+  //   }
+  //   else if (firstName && lastName && password && confirmPassword && accountType) setCanSubmit(true);
+  //   else setCanSubmit(false);
+  // }
+
+  // useEffect(() => {
+  //   checkSubmit()
+
+  //   if (accountInfo) {
+  //     history(redirect);
+  //   }
+    
+  // }, [history, accountInfo, redirect, checkSubmit]);
+
+    // Assuming other state variables and functions
+
+    const checkSubmit = useCallback(() => {
+      if (password !== confirmPassword) {
+        setCanSubmit(false);
+        setMessage('Passwords do not match');
+      } else if (firstName && lastName && password && confirmPassword && accountType) {
+        setCanSubmit(true);
+      } else {
+        setCanSubmit(false);
+      }
+    }, [firstName, lastName, password, confirmPassword, accountType]);
+  
+
+    useEffect(() => {
+      console.log(accountType)
+      checkSubmit();
+  
+      if (accountInfo) {
+        if (accountInfo.account_type === 'S'){
+          history(redirectStudent);
+        }
+        else if (accountInfo.account_type === 'T'){
+          history(redirectTeacher);
+        }
+      }
+    }, [firstName, lastName, password, confirmPassword, accountType, accountInfo, redirectStudent, redirectTeacher, checkSubmit, history]);
+
+  // when button is submitted we pass in info to db to register if valid
+  const submitHandler = (e) => {
+    e.preventDefault()
+    checkSubmit()
+
+    if (canSubmit) {
+      console.log(firstName, lastName, accountType, email, password)
+      dispatch(register(firstName, lastName, accountType, email, password))
+    }
+
+  }
+
+
   //For the teacher and student buttons //
   const handleStudentButtonClick = () => {
     setStudentClicked(true);
+    setAccountType("S")
     setTeacherClicked(false);
   }
+
   const handleTeacherButtonClick = () => {
     setStudentClicked(false);
+    setAccountType("T")
     setTeacherClicked(true);
   }
 
-  //Handlers for the states of the username, password, and confirm password 
-  const usernameChangeHandler = (e) => {
-    setUsername(e.target.value);
-  }
-  const schoolChangeHandler = (e) => {
-    setSchool(e.target.value);
-  }
-  const passwordChangeHandler = (e) => {
-    setPassword(e.target.value);
-  }
+  //Handlers for the states of the firstName, password, and confirm password 
+
+
   const confirmPasswordChangeHandler = (e) => {
-    setPasswordCheck(e.target.value);
+    setConfirmPassword(e.target.value);
     if (e.target.value !== password) {
       setPwdCheckClassName("absolute top-3 -translate-y-1/2 text-xs right-[30px] text-[#FF0000] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs visible")
     } else {
@@ -49,19 +133,14 @@ function RegisterPage() {
     }
   }
 
-  //constant function handler for submit button. Use dispatch with useEffect inside this function
-  const logData = () => {
-    if (password.length === 0 || username.length === 0) {
-      setFieldsRequired(true)
-    }
-    else {
-      console.log(password)
-      console.log(username)
-      console.log(school)
-    }
-  }
+
+
   return (
     // container for whole page
+    <>
+    <Link to="/" className="p-2">
+    Home
+    </Link>
     <div className="flex h-screen items-center justify-center">
       {/* login box */}
       <div className="flex flex-col justify-center items-center grow p-10 md:px-[6%] rounded-[14%] lg:rounded-[8%] border-2 border-[#CFDADD] max-w-[70vw] lg:max-w-[900px] aspect-square max-h-[80vh] lg:max-h-[78vh]">
@@ -86,16 +165,16 @@ function RegisterPage() {
 
 
 
-        {/* container for username element */}
+        {/* container for email element */}
         <div className='flex mb-3 lg:mb-4 self-stretch'>
           <div className='px-6 border-2 border-r-0 border-register-green rounded-l-full'></div>
           <div className='flex-1'>
             <label
-              htmlFor="Username"
+              htmlFor="email"
               className="relative block overflow-hidden rounded-r-full border-2 border-register-green pr-10 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
             >
 
-              {fieldsRequired && !username ? (<p
+              {fieldsRequired && !firstName ? (<p
                 className="absolute top-3 -translate-y-1/2 text-xs right-[30px] text-[#FF0000] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
               >
                 *Required
@@ -105,21 +184,92 @@ function RegisterPage() {
 
               <input
                 type="email"
-                id="Username"
-                placeholder="Username"
+                id="email"
+                placeholder="EMail"
                 className="peer h-8 w-full border-none bg-transparent px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-                onChange={usernameChangeHandler}
+                onChange={(e) => setEmail(e.target.value)}
               />
 
               <span
                 className="absolute start-3 top-3 -translate-y-1/2 text-xs text-register-green transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
               >
-                Username
+                Email
               </span>
 
             </label>
           </div>
         </div>
+
+        {/* container for first name element */}
+        <div className='flex mb-3 lg:mb-4 self-stretch'>
+          <div className='px-6 border-2 border-r-0 border-register-green rounded-l-full'></div>
+          <div className='flex-1'>
+            <label
+              htmlFor="firstName"
+              className="relative block overflow-hidden rounded-r-full border-2 border-register-green pr-10 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+            >
+
+              {fieldsRequired && !firstName ? (<p
+                className="absolute top-3 -translate-y-1/2 text-xs right-[30px] text-[#FF0000] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
+              >
+                *Required
+              </p>) :
+                ""
+              }
+
+              <input
+                type="email"
+                id="firstName"
+                placeholder="firstName"
+                className="peer h-8 w-full border-none bg-transparent px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+
+              <span
+                className="absolute start-3 top-3 -translate-y-1/2 text-xs text-register-green transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
+              >
+                First Name
+              </span>
+
+            </label>
+          </div>
+        </div>
+
+        {/* container for last name element */}
+        <div className='flex mb-3 lg:mb-4 self-stretch'>
+          <div className='px-6 border-2 border-r-0 border-register-green rounded-l-full'></div>
+          <div className='flex-1'>
+            <label
+              htmlFor="lastName"
+              className="relative block overflow-hidden rounded-r-full border-2 border-register-green pr-10 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+            >
+
+              {fieldsRequired && !firstName ? (<p
+                className="absolute top-3 -translate-y-1/2 text-xs right-[30px] text-[#FF0000] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
+              >
+                *Required
+              </p>) :
+                ""
+              }
+
+              <input
+                type="email"
+                id="lastName"
+                placeholder="lastName"
+                className="peer h-8 w-full border-none bg-transparent px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+                onChange={(e) => setLastName(e.target.value)}
+              />
+
+              <span
+                className="absolute start-3 top-3 -translate-y-1/2 text-xs text-register-green transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
+              >
+                Last Name
+              </span>
+
+            </label>
+          </div>
+        </div>
+
 
         {/* container for password element */}
         <div className='flex mb-4 lg:mb-5 self-stretch'>
@@ -143,7 +293,7 @@ function RegisterPage() {
                 id="Password"
                 placeholder="Password"
                 class="peer h-8 w-full border-none bg-transparent px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-                onChange={passwordChangeHandler}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <span
@@ -163,7 +313,8 @@ function RegisterPage() {
             <label
               htmlFor="pwd-check"
               className={`relative block overflow-hidden rounded-r-full border-2 border-register-green pr-10 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 
-            ${(password.length > 0 || passwordCheck.length > 0) ? 'bg-transparent' : 'bg-slate-200'}`}
+            ${(password.length > 0 || confirmPassword
+            .length > 0) ? 'bg-transparent' : 'bg-slate-200'}`}
             >
 
               {/*Displays the not match error only if there is already a password inputted */}
@@ -181,9 +332,11 @@ function RegisterPage() {
                 id="pwd-check"
                 placeholder="Re-enter password"
                 class={`peer h-8 w-full border-none px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm 
-                ${(password.length > 0 || passwordCheck.length > 0) ? 'bg-transparent' : 'bg-slate-200'}`}
+                ${(password.length > 0 || confirmPassword
+                .length > 0) ? 'bg-transparent' : 'bg-slate-200'}`}
                 onChange={confirmPasswordChangeHandler}
-                disabled={!(password.length > 0 || passwordCheck.length > 0)}
+                disabled={!(password.length > 0 || confirmPassword
+                .length > 0)}
               />
 
               <span
@@ -208,9 +361,9 @@ function RegisterPage() {
               <input
                 type="text"
                 id="school"
-                placeholder="Re-enter password"
+                placeholder="Re-enter school"
                 class="peer h-8 w-full border-none bg-transparent px-3 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
-                onChange={schoolChangeHandler}
+                onChange={(e) => setSchool(e.target.value)}
               />
 
               <span
@@ -244,7 +397,8 @@ function RegisterPage() {
         <button
           className="rounded-3xl border-2 border-register-green bg-register-green px-28 py-2 text-xl font-medium text-white hover:bg-transparent hover:text-register-green focus:outline-none focus:ring active:text-[#4F6038] text-center max-w-[fit-content] mb-1 lg:mb-1.5"
           to=""
-          onClick={logData}
+          onMouseEnter={checkSubmit}
+          onClick={submitHandler}
 
         >
           Create
@@ -262,7 +416,7 @@ function RegisterPage() {
 
     </div>
 
-
+    </>
   )
 }
 

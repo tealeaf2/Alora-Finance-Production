@@ -12,12 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-import os
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,7 +25,7 @@ import os
 SECRET_KEY = 'django-insecure-67l8tdvor4y40e%0dh-$si2ycr*dju(5z&cu7z13n(7@!@=_r_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -125,8 +124,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'alora-frontend/build')
-            # FRONTEND_DIR / 'build',
+            os.path.join(BASE_DIR, 'alora-frontend/build'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -194,6 +192,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/icons/'
 
 #this is to let backend know that the static folder exists in backend
@@ -203,13 +202,11 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = 'static/icons'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'account.Account'

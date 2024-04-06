@@ -5,15 +5,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 # converts user model into readable object
 class UserSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField(read_only=True)
     _id = serializers.SerializerMethodField(read_only=True)
     isAdmin = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = Account
         # fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin']
 
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin']
+        fields = ['id', '_id', 'username', 'email', 'first_name', 'last_name', 'account_type', 'isAdmin', 'user_id']
 
     def get__id(self, obj):
         return obj.id
@@ -21,10 +19,22 @@ class UserSerializer(serializers.ModelSerializer):
     def get_isAdmin(self, obj):
         return obj.is_staff
 
-    def get_name(self, obj):
-        name = obj.first_name + " " + obj.last_name
-        if name == '':
-            name = obj.email
+    def get_first_name(self, obj):
+        return obj.first_name
+        
+    def get_last_name(self, obj):
+        return obj.last_name
+    
+    def get_account_type(self, obj):
+        return obj.account_type
+    
+    def get_user_id(self, obj):
+        return obj.user_id
+
+    # def get_name(self, obj):
+    #     name = obj.first_name + " " + obj.last_name
+    #     if name == '':
+    #         name = obj.email
 
         return name
     
@@ -36,7 +46,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = Account
-        fields = ['id', '_id', 'username', 'email', 'name', 'isAdmin', 'token']
+        fields = ['id', '_id', 'username', 'email', 'first_name', 'last_name', 'isAdmin', 'user_id', 'account_type', 'token']
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)

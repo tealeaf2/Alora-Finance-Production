@@ -1,19 +1,33 @@
 {
   "files": {
-    "main.css": "/static/css/main.77f60240.css",
-    "main.js": "/static/js/main.02ecefec.js",
+    "main.css": "/static/css/main.29bbcf03.css",
+    "main.js": "/static/js/main.034cff7e.js",
     "static/js/787.33dc2a9e.chunk.js": "/static/js/787.33dc2a9e.chunk.js",
     "static/media/Sprout.png": "/static/media/Sprout.6474deb0369827ec91d0.png",
-    "static/media/Money_Tree.png": "/static/media/Money_Tree.b349843a3b3431c61f4c.png",
+    "static/media/license1.png": "/static/media/license1.11de6a8eb38e89847fee.png",
+    "static/media/license2.png": "/static/media/license2.e99ecef1fd9d5b4b601f.png",
+    "static/media/pic2.png": "/static/media/pic2.aa5b4c60427b3b4b6866.png",
+    "static/media/pic3.png": "/static/media/pic3.13abb4e55735961769df.png",
     "static/media/Outfit-Regular.ttf": "/static/media/Outfit-Regular.e853df41b41bc9489a8b.ttf",
+    "static/media/pic4.png": "/static/media/pic4.81fbe0fd781d214e0c57.png",
+    "static/media/plant2.png": "/static/media/plant2.1228596cd85385e1008f.png",
     "static/media/plant3.png": "/static/media/plant3.398b2159688ca7a6546a.png",
+    "static/media/Teacher_Icon.png": "/static/media/Teacher_Icon.8b514b61cd1fb66e8c91.png",
+    "static/media/Home_Dude.png": "/static/media/Home_Dude.ad3e481d37ebb7972505.png",
+    "static/media/unit2.png": "/static/media/unit2.1b63e91794c14ed9d858.png",
+    "static/media/plant1.png": "/static/media/plant1.43d2c87a7786e30a54ce.png",
+    "static/media/unit4.png": "/static/media/unit4.46b7ddcafdde78bee014.png",
+    "static/media/unit1.png": "/static/media/unit1.92b78bae620f5596a2f5.png",
+    "static/media/unit5.png": "/static/media/unit5.56a91231301c84aae671.png",
+    "static/media/unit6.png": "/static/media/unit6.e9c32d2bd525d3d322af.png",
+    "static/media/unit3.png": "/static/media/unit3.d4b6180bfde2fb4be826.png",
     "index.html": "/index.html",
-    "main.77f60240.css.map": "/static/css/main.77f60240.css.map",
-    "main.02ecefec.js.map": "/static/js/main.02ecefec.js.map",
+    "main.29bbcf03.css.map": "/static/css/main.29bbcf03.css.map",
+    "main.034cff7e.js.map": "/static/js/main.034cff7e.js.map",
     "787.33dc2a9e.chunk.js.map": "/static/js/787.33dc2a9e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.77f60240.css",
-    "static/js/main.02ecefec.js"
+    "static/css/main.29bbcf03.css",
+    "static/js/main.034cff7e.js"
   ]
 }

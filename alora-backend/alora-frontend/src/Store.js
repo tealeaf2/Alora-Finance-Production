@@ -1,39 +1,63 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
-import { unitListReducer } from './reducers/unitReducers'
+import { topicListReducer } from './redux/reducers/topicReducers'
+import { unitListReducer } from './redux/reducers/unitReducers'
 import { lessonListReducer,
-        lessonDetailsReducer 
+        lessonDetailsReducer,
+        assignLessonReducer,
+        deleteLessonReducer,
+        teacherClassIDsReducer,
+} from './redux/reducers/lessonReducers'
 
-} from './reducers/lessonReducers'
+import { quizListReducer,
+        quizUpdateReducer,
+} from './redux/reducers/quizReducers'
 
-import { quizListReducer } from './reducers/quizReducers'
-
-import { listTreeNameReducer,
+import { listTreeNamesReducer,
         updateTreeNameReducer
-} from './reducers/treeReducers';
+} from './redux/reducers/treeReducers';
 
-import { accountLoginReducer } from './reducers/accountReducers'
+import { accountLoginReducer,
+        accountRegisterReducer,
+        accountDetailsReducer,
+        accountUpdateProfileReducer,
+} from './redux/reducers/accountReducers'
+
+import {
+        parseCurriculumReducer
+} from './redux/reducers/parseReducers'
 
 
 const reducer = combineReducers({
+    topicList: topicListReducer,
     unitList: unitListReducer,
 
     lessonList: lessonListReducer,
     lessonDetails: lessonDetailsReducer,
+    assignStatus: deleteLessonReducer,
+    assignment: assignLessonReducer,
+    teacherClassIds: teacherClassIDsReducer,
 
     quizList: quizListReducer,
+    quizUpdate: quizUpdateReducer,
 
-    treeName: listTreeNameReducer,
+    treeNames: listTreeNamesReducer,
     treeNameUpdate: updateTreeNameReducer,
 
+    parseUpdate: parseCurriculumReducer,
+
     accountLogin: accountLoginReducer,
+    accountRegister: accountRegisterReducer,
+    accountDetails: accountDetailsReducer,
+    accountUpdateProfile: accountUpdateProfileReducer,
 })
 
-const accountLoginInfoFromStorage = localStorage.getItem('accountInfo') ?
+const accountInfoFromStorage = localStorage.getItem('accountInfo') ?
     JSON.parse(localStorage.getItem('accountInfo')) : null
 
 const initialState = {
-    accountLogin: { accountInfo: accountLoginInfoFromStorage },
+    accountLogin: { accountInfo: accountInfoFromStorage
+ },
 }
 
 const store = configureStore({

@@ -7,9 +7,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.db import IntegrityError
+from django.dispatch import Signal
 
 from .models import Account
+from classroom.signals import create_fields_completed_for_user
 
 from .serializer import UserSerializer, UserSerializerWithToken
 
@@ -27,8 +29,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 # return view of token
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-    
+    serializer_class = MyTokenObtainPairSerializer 
+
 # registers user
 @api_view(['POST'])
 def registerUser(request):
@@ -39,16 +41,33 @@ def registerUser(request):
         user = Account.objects.create(
             first_name=data['first_name'],
             last_name=data['last_name'],
+            account_type=data['account_type'],
+
             username=data['email'],
             email=data['email'],
-            password=make_password(data['password'])
+            password=make_password(data['password']),
         )
+        if data.get('account_type') == 'S':
+            print('sent')
+            create_fields_completed_for_user(user=user)
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data)
-    except:
-        message = {'detail': 'User with this email already exists'}
+    except KeyError:
+        message = {'detail': 'Invalid request data'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+    except IntegrityError as e:
+        # Extract the specific integrity constraint violated
+        constraint_name = e.args[0]
+        if 'unique constraint' in constraint_name:
+            message = {'detail': 'A user with this email already exists.'}
+        else:
+            message = {'detail': 'Integrity error: ' + constraint_name}
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        message = {'detail': str(e)}
+        return Response(message, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 
 # updates user info
 @api_view(['PUT'])
@@ -56,11 +75,30 @@ def registerUser(request):
 def updateUserProfile(request):
     user = request.user 
     serializer = UserSerializerWithToken(user, many=False)
-
+    
     data = request.data
-    user.first_name = data['name']
+    
+    # print(request.account)
+    
+    # print("\n\nUSER: ")
+    # print(user)
+    # print(type(user))
+ 
+    # print("\n\DATA: ")
+    # print(data)
+    
+
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+
     user.username = data['email']
     user.email = data['email']
+    
+    # print("USER: ")
+    # print(user)
+    
+    # print("\n\SERIALIZER: ")
+    # print(serializer.data)
 
     if data['password'] != '':
         user.password = make_password(data['password'])
@@ -74,8 +112,19 @@ def updateUserProfile(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getUserProfile(request):
+    # print('\n\nREQUEST: ')
+    # print(request)
+
+    
     user = request.user
+    
+    # print('\n\nUSER: ')
+    # print(user)
+    
     serializer = UserSerializer(user, many=False)
+    
+    # print("\n\nSERIALIZER: ")
+    # print(serializer)
     return Response(serializer.data)
 
 # RETURNS ALL USERS IN DB (must be admin)
